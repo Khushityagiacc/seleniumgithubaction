@@ -26,7 +26,11 @@ jobs:
       - name: Run Selenium Test
         run: mvn test
 
-      - name: Upload Artifacts (Report + Screenshots)
+      # Debug: List files before upload
+      - name: Debug: List test-output contents
+        run: ls -R test-output || echo "test-output folder not found"
+
+      - name: Upload Artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
