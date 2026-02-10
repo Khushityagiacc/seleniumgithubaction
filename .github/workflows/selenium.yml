@@ -20,6 +20,9 @@ jobs:
           distribution: temurin
           java-version: 17
 
+      - name: Create test-output folder
+        run: mkdir -p test-output/screenshots
+
       - name: Build project
         run: mvn clean compile test-compile
 
@@ -27,7 +30,13 @@ jobs:
         run: mvn test
 
       - name: Debug: List test-output contents
-        run: ls -R test-output || echo "test-output folder not found"
+        run: |
+          echo "Listing test-output folder:"
+          if [ -d "test-output" ]; then
+            ls -R test-output
+          else
+            echo "test-output folder not found"
+          fi
 
       - name: Upload Artifacts
         if: always()
