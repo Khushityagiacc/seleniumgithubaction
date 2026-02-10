@@ -30,8 +30,8 @@ jobs:
         run: ls -R test-output || echo "test-output folder not found"
 
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
         if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: selenium-artifacts
           path: test-output
