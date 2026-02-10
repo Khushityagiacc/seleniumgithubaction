@@ -11,26 +11,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout the repo
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 2️⃣ Setup Java
       - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
+      # 3️⃣ Build the project (compile only)
       - name: Build project
         run: mvn clean compile test-compile
 
-      - name: Run Selenium Test
+      # 4️⃣ Run Selenium TestNG tests
+      - name: Run Selenium Tests
         run: mvn test
 
+      # 5️⃣ Debug: List test-output contents
       - name: Debug: List test-output contents
         run: |
           echo "Listing test-output folder:"
           ls -R test-output || echo "test-output folder not found"
 
+      # 6️⃣ Upload artifacts (screenshots + reports)
       - name: Upload Artifacts
         if: always()
         uses: actions/upload-artifact@v4
