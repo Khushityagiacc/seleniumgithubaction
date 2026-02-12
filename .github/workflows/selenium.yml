@@ -29,11 +29,14 @@ jobs:
       - name: Run Selenium Tests
         run: mvn test
 
-    
+      - name: List contents before upload
+        run: |
+          echo "Contents of test-output directory:"
+          ls -R test-output || echo "test-output directory not found!"
 
       - name: Upload Artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: selenium-artifacts
-          path: test-output
+          path: test-output/**
