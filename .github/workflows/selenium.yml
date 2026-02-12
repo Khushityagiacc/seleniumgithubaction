@@ -19,15 +19,10 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
+          cache: maven
 
-      - name: Create test-output folder
-        run: mkdir -p test-output/screenshots
-
-      - name: Build project
-        run: mvn clean compile test-compile
-
-      - name: Run Selenium Tests
-        run: mvn test
+      - name: Run Maven Tests
+        run: mvn clean test
 
       - name: List contents before upload
         run: |
