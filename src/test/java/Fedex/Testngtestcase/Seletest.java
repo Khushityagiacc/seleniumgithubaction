@@ -15,7 +15,7 @@ public class Seletest {
         WebDriver driver = new ChromeDriver();
 
         // Go to example website
-        driver.get("https://example.com");
+        driver.get("https://google.com");
 
         // Ensure test-output/screenshots exists
         File folder = new File("test-output/screenshots");
