@@ -13,7 +13,9 @@ public class Screenshot {
     public static String takeScreenshot(WebDriver driver, String name) {
 
         File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+
+        String timestamp =
+                new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
         String screenshotDir = "test-output/screenshots";
         String fileName = name + "_" + timestamp + ".png";
@@ -26,11 +28,11 @@ public class Screenshot {
             System.out.println("Screenshot failed: " + e.getMessage());
         }
 
-        // ✅ Important: return relative path from test-output
+        // Important: relative path from test-output
         return "screenshots/" + fileName;
     }
 
-    // ✅ ADD THIS METHOD (this is missing in your repo)
+    // ✅ Required method (your earlier error)
     public static void highlightElement(WebDriver driver, WebElement element) {
 
         JavascriptExecutor js = (JavascriptExecutor) driver;
