@@ -10,15 +10,15 @@ public class Extenrreport {
     public static ExtentReports getInstance() {
 
         if (extent == null) {
+
+            // ✅ MUST be inside test-output for artifact upload
             ExtentSparkReporter spark =
                     new ExtentSparkReporter("test-output/ExtentReport.html");
-
-            spark.config().setDocumentTitle("Automation Report");
-            spark.config().setReportName("Selenium GitHub Actions Report");
 
             extent = new ExtentReports();
             extent.attachReporter(spark);
         }
+
         return extent;
     }
 }
