@@ -14,7 +14,7 @@ import com.aventstack.extentreports.*;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-public class Seletest {
+public class SeletestTest {
 
     WebDriver driver;
     ExtentReports extent;
