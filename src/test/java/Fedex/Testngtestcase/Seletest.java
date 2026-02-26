@@ -1,33 +1,82 @@
 package Fedex.Testngtestcase;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.annotations.Test;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import java.io.File;
-import java.nio.file.Files;
+import java.io.IOException;
+import java.time.Duration;
+
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.*;
+
+import com.aventstack.extentreports.*;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class Seletest {
 
-    @Test
-    public void sampleTest() throws Exception {
+    WebDriver driver;
+    ExtentReports extent;
+    ExtentTest test;
+
+    @BeforeTest
+    public void launchBrowser() {
+
+        // Ensure test-output folder exists
+        new File("test-output").mkdirs();
+
+        extent = Extenrreport.getInstance();
+        test = extent.createTest("Sample testcase");
+
         WebDriverManager.chromedriver().setup();
-        WebDriver driver = new ChromeDriver();
 
-        // Go to example website
-        driver.get("https://google.com");
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless=new");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--window-size=1920,1080");
 
-        // Ensure test-output/screenshots exists
-        File folder = new File("test-output/screenshots");
-        if (!folder.exists()) {
-            folder.mkdirs();
+        driver = new ChromeDriver(options);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+    }
+
+    @Test
+    public void dd() throws IOException {
+
+        driver.get("https://www.thewellnesscorner.com/");
+
+        new WebDriverWait(driver, Duration.ofSeconds(20)).until(d ->
+                ((JavascriptExecutor) d).executeScript("return document.readyState")
+                        .equals("complete")
+        );
+
+        String homeScreenshot = Screenshot.takeScreenshot(driver, "test-output/homepage");
+
+        test.info("Opened homepage",
+                MediaEntityBuilder.createScreenCaptureFromPath(homeScreenshot).build());
+
+        WebElement health = driver.findElement(
+                By.cssSelector(".lg\\:w-\\[14\\%\\] .cursor-pointer")
+        );
+
+        Screenshot.highlightElement(driver, health);
+
+        String healthScreenshot = Screenshot.takeScreenshot(driver, "test-output/health_field");
+
+        test.pass("Clicked health",
+                MediaEntityBuilder.createScreenCaptureFromPath(healthScreenshot).build());
+    }
+
+    @AfterTest
+    public void tearDown() {
+
+        if (extent != null) {
+            extent.flush(); // Generates ExtentReport.html
         }
 
-        // Take a screenshot so the folder is not empty
-        File screenshot = ((org.openqa.selenium.TakesScreenshot) driver)
-                .getScreenshotAs(org.openqa.selenium.OutputType.FILE);
-        Files.copy(screenshot.toPath(), new File(folder, "example.png").toPath());
-
-        driver.quit();
+        if (driver != null) {
+            driver.quit();
+        }
     }
 }
