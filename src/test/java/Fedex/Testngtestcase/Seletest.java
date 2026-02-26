@@ -23,11 +23,11 @@ public class Seletest {
     @BeforeTest
     public void launchBrowser() {
 
-        // Ensure test-output folder exists
+        // ✅ Force create test-output folder (VERY IMPORTANT for CI)
         new File("test-output").mkdirs();
 
         extent = Extenrreport.getInstance();
-        test = extent.createTest("Sample testcase");
+        test = extent.createTest("Sample Testcase");
 
         WebDriverManager.chromedriver().setup();
 
@@ -47,11 +47,13 @@ public class Seletest {
         driver.get("https://www.thewellnesscorner.com/");
 
         new WebDriverWait(driver, Duration.ofSeconds(20)).until(d ->
-                ((JavascriptExecutor) d).executeScript("return document.readyState")
+                ((JavascriptExecutor) d)
+                        .executeScript("return document.readyState")
                         .equals("complete")
         );
 
-        String homeScreenshot = Screenshot.takeScreenshot(driver, "test-output/homepage");
+        // Screenshot homepage
+        String homeScreenshot = Screenshot.takeScreenshot(driver, "homepage");
 
         test.info("Opened homepage",
                 MediaEntityBuilder.createScreenCaptureFromPath(homeScreenshot).build());
@@ -62,9 +64,9 @@ public class Seletest {
 
         Screenshot.highlightElement(driver, health);
 
-        String healthScreenshot = Screenshot.takeScreenshot(driver, "test-output/health_field");
+        String healthScreenshot = Screenshot.takeScreenshot(driver, "health_field");
 
-        test.pass("Clicked health",
+        test.pass("Health element captured",
                 MediaEntityBuilder.createScreenCaptureFromPath(healthScreenshot).build());
     }
 
@@ -72,7 +74,7 @@ public class Seletest {
     public void tearDown() {
 
         if (extent != null) {
-            extent.flush(); // Generates ExtentReport.html
+            extent.flush(); // generates report
         }
 
         if (driver != null) {
