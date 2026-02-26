@@ -11,6 +11,7 @@ import org.openqa.selenium.*;
 public class Screenshot {
 
     public static String takeScreenshot(WebDriver driver, String name) {
+
         File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
@@ -25,6 +26,14 @@ public class Screenshot {
             System.out.println("Screenshot failed: " + e.getMessage());
         }
 
-        return "screenshots/" + fileName; // relative path for ExtentReports
+        // ✅ Important: return relative path from test-output
+        return "screenshots/" + fileName;
+    }
+
+    // ✅ ADD THIS METHOD (this is missing in your repo)
+    public static void highlightElement(WebDriver driver, WebElement element) {
+
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].style.border='3px solid red'", element);
     }
 }
