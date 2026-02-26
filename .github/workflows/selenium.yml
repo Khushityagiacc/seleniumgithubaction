@@ -21,15 +21,26 @@ jobs:
           java-version: 17
           cache: maven
 
-      - name: Run Maven Tests
+      # Install Google Chrome (required for Selenium)
+      - name: Install Google Chrome
+        run: |
+          sudo apt update
+          sudo apt install -y google-chrome-stable
+
+      - name: Build and Run Tests
         run: mvn clean test
 
-      - name: List contents before upload
+      # Debug step (helps if folder not found)
+      - name: List project files after test
         run: |
-          echo "Contents of test-output directory:"
-          ls -R test-output || echo "test-output directory not found!"
+          echo "Project structure after execution:"
+          ls -R
 
-      - name: Upload Artifacts
+      # Ensure test-output exists (prevents artifact warning)
+      - name: Ensure test-output exists
+        run: mkdir -p test-output
+
+      - name: Upload Test Artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
