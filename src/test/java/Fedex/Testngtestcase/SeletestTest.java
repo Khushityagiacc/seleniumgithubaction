@@ -24,7 +24,6 @@ public class SeletestTest {
     @BeforeTest
     public void launchBrowser() {
 
-        // ✅ Force create test-output folder (IMPORTANT for CI)
         new File("test-output").mkdirs();
 
         extent = Extenrreport.getInstance();
@@ -43,7 +42,7 @@ public class SeletestTest {
     }
 
     @Test
-    public void dd() throws IOException {
+    public void dd() throws IOException, InterruptedException {
 
         driver.get("https://www.thewellnesscorner.com/");
 
@@ -53,10 +52,14 @@ public class SeletestTest {
                         .equals("complete")
         );
 
+        Thread.sleep(1500);
+
         // ---------------- Homepage Screenshot ----------------
         String homeScreenshot = Screenshot.takeScreenshot(driver, "01_homepage");
         test.info("Opened homepage",
                 MediaEntityBuilder.createScreenCaptureFromPath(homeScreenshot).build());
+
+        Thread.sleep(1000);
 
         // ---------------- Step 1 ----------------
         WebElement firstSection = driver.findElement(
@@ -64,30 +67,41 @@ public class SeletestTest {
         );
 
         Screenshot.highlightElement(driver, firstSection);
+        Thread.sleep(1000);
+
         firstSection.click();
+        Thread.sleep(1500);
 
         String step1 = Screenshot.takeScreenshot(driver, "02_click_first_section");
         test.pass("Clicked first section",
                 MediaEntityBuilder.createScreenCaptureFromPath(step1).build());
 
+        Thread.sleep(1000);
 
         // ---------------- Scroll Top ----------------
         ((JavascriptExecutor) driver).executeScript("window.scrollTo(0,0)");
+        Thread.sleep(1200);
 
         String scroll1 = Screenshot.takeScreenshot(driver, "03_scroll_top");
         test.info("Scrolled to top",
                 MediaEntityBuilder.createScreenCaptureFromPath(scroll1).build());
 
+        Thread.sleep(1000);
 
         // ---------------- Click Home ----------------
         WebElement homeLink = driver.findElement(By.linkText("Home"));
+
         Screenshot.highlightElement(driver, homeLink);
+        Thread.sleep(1000);
+
         homeLink.click();
+        Thread.sleep(1500);
 
         String step2 = Screenshot.takeScreenshot(driver, "04_click_home");
         test.pass("Clicked Home",
                 MediaEntityBuilder.createScreenCaptureFromPath(step2).build());
 
+        Thread.sleep(1000);
 
         // ---------------- Click md:text-sm ----------------
         WebElement mdText = driver.findElement(
@@ -95,22 +109,31 @@ public class SeletestTest {
         );
 
         Screenshot.highlightElement(driver, mdText);
+        Thread.sleep(1000);
+
         mdText.click();
+        Thread.sleep(1500);
 
         String step3 = Screenshot.takeScreenshot(driver, "05_click_md_text");
         test.pass("Clicked md:text-sm element",
                 MediaEntityBuilder.createScreenCaptureFromPath(step3).build());
 
+        Thread.sleep(1000);
 
         // ---------------- Click Dashboard ----------------
         WebElement dashboard = driver.findElement(By.linkText("Dashboard"));
+
         Screenshot.highlightElement(driver, dashboard);
+        Thread.sleep(1000);
+
         dashboard.click();
+        Thread.sleep(1500);
 
         String step4 = Screenshot.takeScreenshot(driver, "06_click_dashboard");
         test.pass("Clicked Dashboard",
                 MediaEntityBuilder.createScreenCaptureFromPath(step4).build());
 
+        Thread.sleep(1000);
 
         test.pass("Test completed successfully");
     }
