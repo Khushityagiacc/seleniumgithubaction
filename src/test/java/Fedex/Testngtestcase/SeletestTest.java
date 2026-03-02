@@ -28,7 +28,7 @@ public class SeletestTest {
         new File("test-output").mkdirs();
 
         extent = Extenrreport.getInstance();
-        test = extent.createTest("GgTest - Wellness Corner Navigation");
+        test = extent.createTest("Wellness Corner Navigation");
 
         WebDriverManager.chromedriver().setup();
 
