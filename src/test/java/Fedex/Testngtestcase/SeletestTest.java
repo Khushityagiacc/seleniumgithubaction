@@ -7,7 +7,8 @@ import java.time.Duration;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.*;
+
 import org.testng.annotations.*;
 
 import com.aventstack.extentreports.*;
@@ -23,11 +24,11 @@ public class SeletestTest {
     @BeforeTest
     public void launchBrowser() {
 
-        // ✅ Force create test-output folder (VERY IMPORTANT for CI)
+        // ✅ Force create test-output folder (IMPORTANT for CI)
         new File("test-output").mkdirs();
 
         extent = Extenrreport.getInstance();
-        test = extent.createTest("Sample Testcase");
+        test = extent.createTest("GgTest - Wellness Corner Navigation");
 
         WebDriverManager.chromedriver().setup();
 
@@ -52,29 +53,73 @@ public class SeletestTest {
                         .equals("complete")
         );
 
-        // Screenshot homepage
-        String homeScreenshot = Screenshot.takeScreenshot(driver, "homepage");
-
+        // ---------------- Homepage Screenshot ----------------
+        String homeScreenshot = Screenshot.takeScreenshot(driver, "01_homepage");
         test.info("Opened homepage",
                 MediaEntityBuilder.createScreenCaptureFromPath(homeScreenshot).build());
 
-        WebElement health = driver.findElement(
-                By.cssSelector(".lg\\:w-\\[14\\%\\] .cursor-pointer")
+        // ---------------- Step 1 ----------------
+        WebElement firstSection = driver.findElement(
+                By.cssSelector(".lg\\:w-\\[14\\%\\]:nth-child(1) .md\\:text-sm > span")
         );
 
-        Screenshot.highlightElement(driver, health);
+        Screenshot.highlightElement(driver, firstSection);
+        firstSection.click();
 
-        String healthScreenshot = Screenshot.takeScreenshot(driver, "health_field");
+        String step1 = Screenshot.takeScreenshot(driver, "02_click_first_section");
+        test.pass("Clicked first section",
+                MediaEntityBuilder.createScreenCaptureFromPath(step1).build());
 
-        test.pass("Health element captured",
-                MediaEntityBuilder.createScreenCaptureFromPath(healthScreenshot).build());
+
+        // ---------------- Scroll Top ----------------
+        ((JavascriptExecutor) driver).executeScript("window.scrollTo(0,0)");
+
+        String scroll1 = Screenshot.takeScreenshot(driver, "03_scroll_top");
+        test.info("Scrolled to top",
+                MediaEntityBuilder.createScreenCaptureFromPath(scroll1).build());
+
+
+        // ---------------- Click Home ----------------
+        WebElement homeLink = driver.findElement(By.linkText("Home"));
+        Screenshot.highlightElement(driver, homeLink);
+        homeLink.click();
+
+        String step2 = Screenshot.takeScreenshot(driver, "04_click_home");
+        test.pass("Clicked Home",
+                MediaEntityBuilder.createScreenCaptureFromPath(step2).build());
+
+
+        // ---------------- Click md:text-sm ----------------
+        WebElement mdText = driver.findElement(
+                By.cssSelector(".md\\:text-sm > .whitespace-nowrap")
+        );
+
+        Screenshot.highlightElement(driver, mdText);
+        mdText.click();
+
+        String step3 = Screenshot.takeScreenshot(driver, "05_click_md_text");
+        test.pass("Clicked md:text-sm element",
+                MediaEntityBuilder.createScreenCaptureFromPath(step3).build());
+
+
+        // ---------------- Click Dashboard ----------------
+        WebElement dashboard = driver.findElement(By.linkText("Dashboard"));
+        Screenshot.highlightElement(driver, dashboard);
+        dashboard.click();
+
+        String step4 = Screenshot.takeScreenshot(driver, "06_click_dashboard");
+        test.pass("Clicked Dashboard",
+                MediaEntityBuilder.createScreenCaptureFromPath(step4).build());
+
+
+        test.pass("Test completed successfully");
     }
 
     @AfterTest
     public void tearDown() {
 
         if (extent != null) {
-            extent.flush(); // generates report
+            extent.flush();
         }
 
         if (driver != null) {
